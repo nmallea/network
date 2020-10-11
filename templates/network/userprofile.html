@@ -1,0 +1,19 @@
+{% extends "network/index.html" %}
+
+{% block profile %}
+    <h1>{{ user_info.username }}</h1>
+    <div class="follow-stats">
+        <span class="follow-count">Followers <strong>{{ follower_count }} </strong></span>
+        <span class="follow-count">Following <strong>{{ following_count }}</strong></span>
+    </div>
+    {% if user.is_authenticated and logged_in_user != user_info %}
+        <form action="{% url 'profile' user_info.username %}" method="post">
+            {% csrf_token %}
+            {% if isFollowing %}
+            <button type="Submit" class="btn btn-info">Unfollow</button>
+            {% else %}
+            <button type="Submit" class="btn btn-primary">Follow</button>
+            {% endif %}
+        </form>
+    {% endif %}
+{% endblock %}
