@@ -36,17 +36,6 @@ def index(request):
         "guest_user": guest_user
     })
 
-def paginate(request, posts):
-    page = request.GET.get('page', 1)
-    paginator = Paginator(posts, 10)
-    try:
-        paginated_posts = paginator.page(page)
-    except PageNotAnInteger:
-        paginated_posts = paginator.page(1)
-    except EmptyPage:
-        paginated_posts = paginator.page(paginator.num_pages)
-    return paginated_posts
-
 def login_view(request):
     if request.user.is_authenticated: # person already logged in
         return HttpResponseRedirect(reverse("index"))
@@ -227,3 +216,14 @@ def handle_put(request, data):
         unliked_post = Post.objects.get(id=data['post_id'])
         Like.objects.all().filter(post=unliked_post, user=current_user).delete()
         update_likes([unliked_post])
+
+def paginate(request, posts):
+    page = request.GET.get('page', 1)
+    paginator = Paginator(posts, 10)
+    try:
+        paginated_posts = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_posts = paginator.page(1)
+    except EmptyPage:
+        paginated_posts = paginator.page(paginator.num_pages)
+    return paginated_posts
