@@ -3,36 +3,48 @@
 {% block body %}
     {% block profile %}
     {% endblock %}
-    <h3>{{ title }}</h3>
+    <h1 class="text-center my-4">{{ title }}</h1>
     {% for post in posts %}
+    <div class="container">
         <div class="post">
-            <a href="{% url 'profile' post.author %}"><h6>{{ post.author }}</h6></a>
-            <div class="content">{{ post.content }}</div>
-            {% if guest_user %}
-                <button class="disabled-like" disabled><i class="fas fa-heart"></i> <span class="like-num">{{ post.likes }}</span></button>
-            {% else %}
-                {% if post in liked_posts %}
-                    <button class="liked"><i class="fas fa-heart"></i> <span class="like-num">{{ post.likes }}</span></button>
+        <div class="card text-center">
+                <div class="card-header">
+                    <a href="{% url 'profile' post.author %}"><h6>{{ post.author }}</h6></a>
+                </div>
+                <div class="card-body">
+                <p class="card-text">{{ post.content }}</p>
+                {% if guest_user %}
+                <button type="button" class="disabled-like" disabled><i class="fas fa-heart"></i> <span class="like-num">{{ post.likes }}</span></button>
                 {% else %}
-                    <button class="likes"><i class="far fa-heart"></i> <span class="like-num">{{ post.likes }}</span></button>
-                {% endif %}
-            {% endif %}
-            <div class="footer">
-                <span class="timestamp">{{ post.timestamp }}</span>
-                {% if post.author == logged_in_user %}
-                    <button class="edit-btn">Edit</button>
-                {% endif %}
-                <p hidden class="key">{{ post.id }}</p>
+                        {% if post in liked_posts %}
+                        <button type="button" class="liked"><i class="fas fa-heart"></i> <span class="like-num">{{ post.likes }}</span></button>
+                        {% else %}
+                        <button type="button" class="likes"><i class="far fa-heart"></i> <span class="like-num">{{ post.likes }}</span></button>
+                        {% endif %}
+                    {% endif %}
+                    {% if post.author == logged_in_user %}
+                            <button type="button" class="btn btn-primary">Edit</button>
+                        {% endif %}
+                        <p hidden class="key">{{ post.id }}</p>
+                </div>
+                    <div class="card-footer text-muted">
+                        <footer class="blockquote-footer">Posted at: <cite title="Source Title">{{ post.timestamp }}</cite></footer></blockquote>
+                        <!-- {% if post.author == logged_in_user %}
+                            <button class="edit-btn">Edit</button>
+                        {% endif %} -->
+                        <p hidden class="key">{{ post.id }}</p>
+                    </div>
+                </div>
             </div>
-
         </div>
+    </div>
     {% empty %}
         {{ empty_msg }}
     {% endfor %}
 
     {% if posts.has_other_pages %}
     <nav aria-label="Page navigation example">
-        <ul class="pagination">
+        <ul class="pagination justify-content-center">
             {% if posts.has_previous %}
                 <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a></li>
             {% else %}
