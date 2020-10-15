@@ -37,16 +37,14 @@ def index(request):
     })
 
 def login_view(request):
-    if request.user.is_authenticated: # person already logged in
+    if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
     if request.method == "POST":
 
-        # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
 
-        # Check if authentication successful
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
@@ -64,21 +62,17 @@ def logout_view(request):
 
 
 def register(request):
-    if request.user.is_authenticated: # person already logged in
+    if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
-        # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(request, "network/register.html", {
                 "message": "Passwords must match."
             })
-
-        # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
@@ -96,9 +90,6 @@ def create(request):
     if request.method == "POST":
         content = request.POST["content"]
         author = request.user
-
-        # TODO: consider enabling markdown posts
-
         p = Post(author=author, content=content)
         p.save()
         return HttpResponseRedirect(reverse("index"))
@@ -113,12 +104,12 @@ def profile(request, user):
         user_info = User.objects.get(username=user)
         follower_list = Follower.objects.all().filter(following=user_info)
         user_followers = []
-        for follower in follower_list: # get follower usernames
+        for follower in follower_list:
             user_followers.append(follower.username)
         following_list = Follower.objects.all().filter(username=user_info.username)
 
         if request.method == "POST":
-            if request.user.username in user_followers: # unfollow
+            if request.user.username in user_followers:
                 logged_in_user = User.objects.get(username=request.user.username)
                 Follower.objects.all().filter(following=user_info,username=request.user.username).delete()
                 logged_in_user.save()
@@ -134,7 +125,7 @@ def profile(request, user):
             try:
                 liked_posts = get_likes(request)
                 guest_user = False
-            except: # no one is logged in
+            except:
                 liked_posts =[]
                 guest_user = True
 
@@ -144,7 +135,6 @@ def profile(request, user):
                 logged_in_user = None
             isFollowing = False
             if request.user.username in user_followers:
-                # check if logged in user follows the profiled user
                 isFollowing = True
             return render(request, "network/profile.html", context={
                 "user_info": user_info,
@@ -158,7 +148,7 @@ def profile(request, user):
                 "liked_posts": liked_posts,
                 "guest_user": guest_user
             })
-    except: # user doesn't exist
+    except:
         return render(request, "network/error.html", context={
             "error_type": "Profile Does Not Exist",
             "message": "Your request for " + user +"\'s profile did not return a match."

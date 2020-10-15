@@ -1,25 +1,24 @@
 {% extends "network/index.html" %}
 
 {% block profile %}
-<div class="container my-4">
-    <div class="row mt-3">
-        <div class="col ml-5">
+<div class="container my-3">
+    <div class="card bg-light mb-3" style="max-width: 18rem;">
+        <div class="card-header">{{ user_info.username }}</div>
+        <div class="card-body">
+            <span class="follow-count">Followers <strong>{{ follower_count }} </strong></span>
+            <span class="follow-count">Following <strong>{{ following_count }}</strong></span>
         </div>
     </div>
-    <h1>{{ user_info.username }}</h1>
-    <div class="follow-stats">
-        <span class="follow-count">Followers <strong>{{ follower_count }} </strong></span>
-        <span class="follow-count">Following <strong>{{ following_count }}</strong></span>
-    </div>
-    {% if user.is_authenticated and logged_in_user != user_info %}
-        <form action="{% url 'profile' user_info.username %}" method="post">
-            {% csrf_token %}
-            {% if isFollowing %}
-            <button type="Submit" class="btn btn-primary">Unfollow</button>
-            {% else %}
-            <button type="Submit" class="btn btn-primary">Follow</button>
-            {% endif %}
-        </form>
+
+        {% if user.is_authenticated and logged_in_user != user_info %}
+            <form action="{% url 'profile' user_info.username %}" method="post">
+                {% csrf_token %}
+                {% if isFollowing %}
+                <button type="Submit" class="btn btn-primary">Unfollow</button>
+                {% else %}
+                <button type="Submit" class="btn btn-primary">Follow</button>
+                {% endif %}
+            </form>
 </div>
     {% endif %}
 {% endblock %}

@@ -3,7 +3,7 @@
 {% block body %}
     {% block profile %}
     {% endblock %}
-    <h3>{{ title }}</h3>
+    <h3 style="text-align:center">{{ title }}</h3>
     {% for post in posts %}
     <div class="container my-4">
     <div class="post">
@@ -21,7 +21,6 @@
                 {% endif %}
             {% endif %}
             <div class="footer">
-                <span class="timestamp">{{ post.timestamp }}</span>
                 {% if post.author == logged_in_user %}
                     <button class="edit-btn">Edit</button>
                 {% endif %}

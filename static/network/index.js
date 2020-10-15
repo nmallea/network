@@ -5,10 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
-  // edit post
   function editPost(button) {
-      var parentElem = button.parentElement // access the "footer" div, which includes the button
-      var grandparentElem = parentElem.parentElement; // access the "post" div, which includes the footer and the content
+      var parentElem = button.parentElement
+      var grandparentElem = parentElem.parentElement;
       var contentElement = getChildElement(grandparentElem, 'content');
       var oldContent = contentElement.innerHTML;
       var contentTextArea = document.createElement('textarea');
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
       parentElem.replaceChild(saveBtn, button)
   }
 
-  // save post
   function savePost(button, oldContent) {
       var parentElem = button.parentElement
       var grandparentElem = parentElem.parentElement;
@@ -41,8 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       var postId = getChildElement(parentElem, 'key').innerHTML;
 
-      // TODO: save info to server
-
       fetch(window.location.href, {
           method: 'PUT',
           body: JSON.stringify({
@@ -58,9 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  // get cookies for CSRF token
   function getCookie(name) {
-      // no cookie
       if (!document.cookie) {
           return null;
       }
@@ -69,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
           .map(c => c.trim())
           .filter(c => c.startsWith(name + '='));
 
-      // no cookie
       if (token.length === 0) {
           return null;
       }
